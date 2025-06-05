@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  multiquerier:
+    build: .
+    container_name: multiquerier-app
+    ports:
+      - "8080:8080"
+    environment:
+      # DB2 Configuration - Update these values
+      - SPRING_DATASOURCE_URL=jdbc:db2://your-db2-host:50000/your-database
+      - SPRING_DATASOURCE_USERNAME=your_username
+      - SPRING_DATASOURCE_PASSWORD=your_password
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.ibm.db2.jcc.DB2Driver
+      
+      # Server Configuration
+      - SERVER_PORT=8080
+      
+      # Logging Configuration
+      - LOGGING_LEVEL_COM_MULTIQUERIER=INFO
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC=WARN
+      
+    volumes:
+      # Optional: Mount logs directory
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/query/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a DB2 container for testing (uncomment if needed)
+  # db2:
+  #   image: ibmcom/db2:11.5.7.0a
+  #   container_name: multiquerier-db2
+  #   environment:
+  #     - LICENSE=accept
+  #     - DB2INSTANCE=db2inst1
+  #     - DB2INST1_PASSWORD=password
+  #     - DBNAME=testdb
+  #   ports:
+  #     - "50000:50000"
+  #   volumes:
+  #     - db2_data:/database
+  #   restart: unless-stopped
+
+# volumes:
+#   db2_data:
