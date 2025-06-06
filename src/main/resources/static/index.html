@@ -31,18 +31,22 @@
                         </h5>
                     </div> -->
                     <div class="card-body">
+                        <!-- Column Toggle Controls -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 text-muted small">Column Visibility:</span>
+                                <button class="btn btn-sm btn-outline-secondary me-2" onclick="toggleColumn(0)" title="Toggle SQL Query column visibility">
+                                    <i class="fas fa-eye" id="columnToggle0"></i>
+                                    <span class="ms-1">SQL Query</span>
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="table-responsive">
                             <table class="table table-bordered" id="queryTable">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th style="width: 30%; min-width: 400px;">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <span>SQL Query</span>
-                                                <button class="btn btn-sm btn-outline-light" onclick="toggleColumn(0)" title="Toggle column visibility">
-                                                    <i class="fas fa-eye" id="columnToggle0"></i>
-                                                </button>
-                                            </div>
-                                        </th>
+                                        <th style="width: 30%; min-width: 400px;">SQL Query</th>
                                         <th style="width: 70%">Result</th>
                                     </tr>
                                 </thead>
