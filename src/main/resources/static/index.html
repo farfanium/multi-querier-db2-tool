@@ -10,13 +10,13 @@
 </head>
 <body>
     <div class="container-fluid">
-        <header class="py-3 mb-4 border-bottom">
+        <header class="py-2 mb-3 border-bottom">
             <div class="d-flex align-items-center">
-                <i class="fas fa-database text-primary me-2 fs-3"></i>
-                <h1 class="h3 mb-0">Multi-Querier DB2 Tool</h1>
+                <i class="fas fa-database text-muted me-2 fs-6"></i>
+                <h1 class="h5 mb-0 text-muted">Multi-Querier DB2 Tool</h1>
                 <div class="ms-auto">
-                    <button class="btn btn-success" onclick="addQueryRow()">
-                        <i class="fas fa-plus me-1"></i>Add Query Row
+                    <button class="btn btn-outline-secondary btn-sm" onclick="addQueryRow()">
+                        <i class="fas fa-plus" style="font-size: 0.75rem;"></i>
                     </button>
                 </div>
             </div>
@@ -24,19 +24,14 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <!-- <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-list me-2"></i>Query Workspace
-                        </h5>
-                    </div> -->
-                    <div class="card-body">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-2">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="queryTable">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th style="width: 30%">SQL Query</th>
-                                        <th style="width: 70%">Result</th>
+                            <table class="table table-sm table-borderless mb-0" id="queryTable">
+                                <thead>
+                                    <tr class="border-bottom">
+                                        <th class="text-muted fw-normal" style="width: 30%; font-size: 0.85rem; min-width: 300px">SQL Query</th>
+                                        <th class="text-muted fw-normal" style="width: 70%; font-size: 0.85rem;">Result</th>
                                     </tr>
                                 </thead>
                                 <tbody id="queryTableBody">
