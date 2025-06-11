@@ -117,7 +117,7 @@ function displayResult(resultDiv, result) {
                 <i class="fas fa-check-circle" style="font-size: 0.8rem;"></i>
                 Query executed successfully
             </div> -->
-            <div class="execution-info" style="font-size: 0.6rem;>
+            <div class="execution-info" style="font-size: 0.6rem;">
                 <strong>Rows:</strong> ${result.rowCount} | 
                 <strong>Execution Time:</strong> ${result.executionTimeMs}ms
             </div>
@@ -125,15 +125,24 @@ function displayResult(resultDiv, result) {
                 <table class="table table-sm table-striped result-table">
                     <thead class="sticky-header">
                         <tr>
-                            ${result.columns.map(col => `<th>${escapeHtml(col)}</th>`).join('')}
+                            ${result.columns.map((col, index) => {
+                                // Adjust column width based on content type and position
+                                const minWidth = col.length > 20 ? '150px' : '100px';
+                                return `<th style="min-width: ${minWidth};">${escapeHtml(col)}</th>`;
+                            }).join('')}
                         </tr>
                     </thead>
                     <tbody>
                         ${result.data.map(row => `
                             <tr>
-                                ${result.columns.map(col => `
-                                    <td title="${escapeHtml(String(row[col] || ''))}">${escapeHtml(String(row[col] || ''))}</td>
-                                `).join('')}
+                                ${result.columns.map(col => {
+                                    const cellValue = String(row[col] || '');
+                                    const displayValue = cellValue.length > 50 ? 
+                                        cellValue.substring(0, 50) + '...' : cellValue;
+                                    return `
+                                        <td title="${escapeHtml(cellValue)}">${escapeHtml(displayValue)}</td>
+                                    `;
+                                }).join('')}
                             </tr>
                         `).join('')}
                     </tbody>
@@ -159,6 +168,45 @@ function displayResult(resultDiv, result) {
     
     resultDiv.innerHTML = html;
 }
+
+// Function to check and update horizontal scroll indicators
+function updateScrollIndicators(tableContainer) {
+    const table = tableContainer.querySelector('.result-table');
+    if (table) {
+        const hasHorizontalScroll = table.scrollWidth > tableContainer.clientWidth;
+        tableContainer.classList.toggle('has-horizontal-scroll', hasHorizontalScroll);
+    }
+}
+
+// Update scroll indicators for all table containers
+function updateAllScrollIndicators() {
+    document.querySelectorAll('.table-container').forEach(updateScrollIndicators);
+}
+
+// Add scroll event listeners to detect scrolling
+function addScrollListeners(tableContainer) {
+    tableContainer.addEventListener('scroll', function() {
+        // Optional: Add scroll position indicators or other effects
+    });
+}
+
+// Enhanced display result function with scroll indicators
+const originalDisplayResult = displayResult;
+displayResult = function(resultDiv, result) {
+    originalDisplayResult(resultDiv, result);
+    
+    // Update scroll indicators after content is loaded
+    setTimeout(() => {
+        const tableContainer = resultDiv.querySelector('.table-container');
+        if (tableContainer) {
+            updateScrollIndicators(tableContainer);
+            addScrollListeners(tableContainer);
+        }
+    }, 100);
+};
+
+// Update scroll indicators on window resize
+window.addEventListener('resize', updateAllScrollIndicators);
 
 // Show error message
 function showError(resultDiv, message) {

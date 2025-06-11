@@ -37,6 +37,12 @@ body {
     font-size: 11px;
     margin-bottom: 0;
     color: #555;
+    white-space: nowrap; /* Prevent table from wrapping */
+    min-width: 100%; /* Ensure table takes full width */
+    table-layout: auto;
+    width: auto;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .result-table th {
@@ -49,21 +55,25 @@ body {
     border-bottom: 1px solid #e0e0e0;
     padding: 6px 8px;
     font-size: 11px;
+    min-width: 100px; /* Minimum column width */
+    max-width: 300px; /* Set reasonable max width */
+    word-break: keep-all;
+    overflow-wrap: normal;
 }
 
 .result-table td {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 300px; /* Set reasonable max width */
+    min-width: 100px; /* Minimum column width */
+    overflow: visible;
+    text-overflow: clip;
     white-space: nowrap;
     padding: 4px 8px;
     border-bottom: 1px solid #f0f0f0;
+    word-break: keep-all;
+    overflow-wrap: normal;
 }
 
 .result-table td:hover {
-    overflow: visible;
-    white-space: normal;
-    word-wrap: break-word;
     background-color: #f8f8f8;
 }
 
@@ -116,9 +126,37 @@ body {
 
 .table-container {
     max-height: 250px;
-    overflow-y: auto;
+    overflow: auto; /* Enable both horizontal and vertical scrolling */
     border: 1px solid #e0e0e0;
     border-radius: 4px;
+    width: 100%;
+    position: relative;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+/* Fade effect to indicate more content on the right */
+.table-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(248, 248, 248, 0.8));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.table-container:hover::after {
+    opacity: 1;
+}
+
+/* Show scroll indicator when content is wider than container */
+.table-container.has-horizontal-scroll::after {
+    opacity: 0.6;
 }
 
 .sticky-header {
@@ -158,25 +196,30 @@ body {
 /* Custom scrollbar */
 .table-container::-webkit-scrollbar,
 .result-container::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 .table-container::-webkit-scrollbar-track,
 .result-container::-webkit-scrollbar-track {
     background: #f8f8f8;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .table-container::-webkit-scrollbar-thumb,
 .result-container::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 3px;
+    background: #ccc;
+    border-radius: 4px;
+    border: 1px solid #f8f8f8;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover,
 .result-container::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
+    background: #aaa;
+}
+
+.table-container::-webkit-scrollbar-corner {
+    background: #f8f8f8;
 }
 
 /* Responsive adjustments */
@@ -197,6 +240,20 @@ body {
     .btn-sm {
         padding: 0.15rem 0.3rem;
         font-size: 0.7rem;
+    }
+    
+    /* Adjust table columns for mobile */
+    .result-table th,
+    .result-table td {
+        min-width: 80px;
+        max-width: 200px;
+        font-size: 10px;
+    }
+    
+    /* Make scroll indicators more visible on mobile */
+    .table-container::after {
+        width: 15px;
+        background: linear-gradient(to right, transparent, rgba(248, 248, 248, 0.9));
     }
 }
 
