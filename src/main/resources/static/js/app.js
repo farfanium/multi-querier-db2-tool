@@ -117,7 +117,7 @@ function displayResult(resultDiv, result) {
                 <i class="fas fa-check-circle" style="font-size: 0.8rem;"></i>
                 Query executed successfully
             </div> -->
-            <div class="execution-info" style="font-size: 0.6rem;>
+            <div class="execution-info" style="font-size: 0.6rem;">
                 <strong>Rows:</strong> ${result.rowCount} | 
                 <strong>Execution Time:</strong> ${result.executionTimeMs}ms
             </div>
