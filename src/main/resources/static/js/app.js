@@ -23,7 +23,7 @@ function addQueryRow() {
     row.className = 'row query-row fade-in mb-3 pb-3 border-bottom';
     
     row.innerHTML = `
-        <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+        <div class="col-12 col-lg-3 mb-3 mb-lg-0">
             <textarea 
                 class="form-control query-textarea" 
                 id="query_${rowId}" 
@@ -42,7 +42,7 @@ function addQueryRow() {
                 </button>
             </div>
         </div>
-        <div class="col-12 col-lg-8">
+        <div class="col-12 col-lg-9">
             <div id="result_${rowId}" class="result-container">
                 <div class="no-results">
                     <i class="fas fa-info-circle" style="font-size: 0.8rem;"></i>
