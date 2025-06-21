@@ -12,18 +12,18 @@ document.addEventListener('DOMContentLoaded', function() {
     checkApiHealth();
 });
 
-// Add a new query row to the table
+// Add a new query row to the container
 function addQueryRow() {
     rowCounter++;
     const rowId = `row_${rowCounter}`;
     
-    const tableBody = document.getElementById('queryTableBody');
-    const row = document.createElement('tr');
+    const rowsContainer = document.getElementById('queryRowsContainer');
+    const row = document.createElement('div');
     row.id = rowId;
-    row.className = 'query-row fade-in';
+    row.className = 'row query-row fade-in mb-3 pb-3 border-bottom';
     
     row.innerHTML = `
-        <td class="p-2">
+        <div class="col-12 col-lg-4 mb-3 mb-lg-0">
             <textarea 
                 class="form-control query-textarea" 
                 id="query_${rowId}" 
@@ -41,18 +41,18 @@ function addQueryRow() {
                     <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                 </button>
             </div>
-        </td>
-        <td class="p-2">
+        </div>
+        <div class="col-12 col-lg-8">
             <div id="result_${rowId}" class="result-container">
                 <div class="no-results">
                     <i class="fas fa-info-circle" style="font-size: 0.8rem;"></i>
                     No query executed yet
                 </div>
             </div>
-        </td>
+        </div>
     `;
     
-    tableBody.appendChild(row);
+    rowsContainer.appendChild(row);
     
     // Focus on the new textarea
     setTimeout(() => {
@@ -198,7 +198,7 @@ function clearRow(rowId) {
     queryTextarea.focus();
 }
 
-// Remove a row from the table
+// Remove a row from the container
 function removeRow(rowId) {
     const row = document.getElementById(rowId);
     if (row) {
@@ -211,8 +211,8 @@ function removeRow(rowId) {
             row.remove();
             
             // If no rows left, add one
-            const tableBody = document.getElementById('queryTableBody');
-            if (tableBody.children.length === 0) {
+            const rowsContainer = document.getElementById('queryRowsContainer');
+            if (rowsContainer.children.length === 0) {
                 addQueryRow();
             }
         }, 200);
@@ -301,8 +301,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Export queries to JSON file
 function exportQueries() {
     const queries = [];
-    const tableBody = document.getElementById('queryTableBody');
-    const rows = tableBody.getElementsByClassName('query-row');
+    const rowsContainer = document.getElementById('queryRowsContainer');
+    const rows = rowsContainer.getElementsByClassName('query-row');
     
     for (let row of rows) {
         const rowId = row.id;
@@ -357,8 +357,8 @@ function importQueries(event) {
             }
             
             // Clear existing queries
-            const tableBody = document.getElementById('queryTableBody');
-            tableBody.innerHTML = '';
+            const rowsContainer = document.getElementById('queryRowsContainer');
+            rowsContainer.innerHTML = '';
             rowCounter = 0;
             
             // Add imported queries
@@ -386,8 +386,8 @@ function importQueries(event) {
             showNotification(`Failed to import queries: ${error.message}`, 'error');
             
             // Ensure at least one row exists
-            const tableBody = document.getElementById('queryTableBody');
-            if (tableBody.children.length === 0) {
+            const rowsContainer = document.getElementById('queryRowsContainer');
+            if (rowsContainer.children.length === 0) {
                 addQueryRow();
             }
         }

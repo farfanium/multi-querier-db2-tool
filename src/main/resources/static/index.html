@@ -32,18 +32,18 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-2">
-                        <div class="table-responsive">
-                            <table class="table table-sm table-borderless mb-0" id="queryTable">
-                                <thead>
-                                    <tr class="border-bottom">
-                                        <th class="text-muted fw-normal" style="width: 30%; font-size: 0.85rem; min-width: 300px">SQL Query</th>
-                                        <th class="text-muted fw-normal" style="width: 70%; font-size: 0.85rem;">Result</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="queryTableBody">
-                                    <!-- Query rows will be added here dynamically -->
-                                </tbody>
-                            </table>
+                        <!-- Header row -->
+                        <div class="row border-bottom pb-2 mb-3">
+                            <div class="col-12 col-lg-4">
+                                <h6 class="text-muted fw-normal mb-0" style="font-size: 0.85rem;">SQL Query</h6>
+                            </div>
+                            <div class="col-12 col-lg-8">
+                                <h6 class="text-muted fw-normal mb-0" style="font-size: 0.85rem;">Result</h6>
+                            </div>
+                        </div>
+                        <!-- Query rows container -->
+                        <div id="queryRowsContainer">
+                            <!-- Query rows will be added here dynamically -->
                         </div>
                     </div>
                 </div>

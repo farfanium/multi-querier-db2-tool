@@ -275,3 +275,27 @@ header {
 .fade-in {
     animation: fadeIn 0.2s ease-in-out;
 }
+
+/* Grid-based query row styles */
+#queryRowsContainer .query-row {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+#queryRowsContainer .query-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Ensure result containers have consistent height */
+.query-row .result-container {
+    min-height: 120px;
+}
+
+@media (max-width: 991.98px) {
+    .query-row .col-12:first-child {
+        margin-bottom: 1rem;
+    }
+}
