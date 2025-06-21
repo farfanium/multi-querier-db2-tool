@@ -15,7 +15,13 @@
                 <i class="fas fa-database text-muted me-2 fs-6"></i>
                 <h1 class="h5 mb-0 text-muted">Multi-Querier DB2 Tool</h1>
                 <div class="ms-auto">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="addQueryRow()">
+                    <button class="btn btn-outline-secondary btn-sm me-2" onclick="exportQueries()" title="Export Queries">
+                        <i class="fas fa-download" style="font-size: 0.75rem;"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm me-2" onclick="document.getElementById('importFile').click()" title="Import Queries">
+                        <i class="fas fa-upload" style="font-size: 0.75rem;"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="addQueryRow()" title="Add Query Row">
                         <i class="fas fa-plus" style="font-size: 0.75rem;"></i>
                     </button>
                 </div>
@@ -44,6 +50,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importQueries(event)">
 
     <!-- Loading Modal -->
     <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">

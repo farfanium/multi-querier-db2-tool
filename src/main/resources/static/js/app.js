@@ -256,6 +256,18 @@ document.addEventListener('keydown', function(event) {
         addQueryRow();
         event.preventDefault();
     }
+    
+    // Ctrl/Cmd + Shift + E to export queries
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'E') {
+        exportQueries();
+        event.preventDefault();
+    }
+    
+    // Ctrl/Cmd + Shift + I to import queries
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'I') {
+        document.getElementById('importFile').click();
+        event.preventDefault();
+    }
 });
 
 // Add subtle tooltip for keyboard shortcuts
@@ -272,6 +284,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div><strong>Shortcuts:</strong></div>
             <div>⌘+Enter: Execute</div>
             <div>⌘+⇧+N: Add row</div>
+            <div>⌘+⇧+E: Export</div>
+            <div>⌘+⇧+I: Import</div>
         `;
         document.body.appendChild(tooltip);
         
@@ -283,3 +297,135 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }, 1000);
 });
+
+// Export queries to JSON file
+function exportQueries() {
+    const queries = [];
+    const tableBody = document.getElementById('queryTableBody');
+    const rows = tableBody.getElementsByClassName('query-row');
+    
+    for (let row of rows) {
+        const rowId = row.id;
+        const queryTextarea = document.getElementById(`query_${rowId}`);
+        const query = queryTextarea.value.trim();
+        
+        if (query) {
+            queries.push({
+                query: query,
+                timestamp: new Date().toISOString()
+            });
+        }
+    }
+    
+    if (queries.length === 0) {
+        showNotification('No queries to export', 'warning');
+        return;
+    }
+    
+    const exportData = {
+        queries: queries,
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `multiquerier-queries-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification(`Exported ${queries.length} queries successfully`, 'success');
+}
+
+// Import queries from JSON file
+function importQueries(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importData = JSON.parse(e.target.result);
+            
+            // Validate import data structure
+            if (!importData.queries || !Array.isArray(importData.queries)) {
+                throw new Error('Invalid file format. Expected queries array.');
+            }
+            
+            // Clear existing queries
+            const tableBody = document.getElementById('queryTableBody');
+            tableBody.innerHTML = '';
+            rowCounter = 0;
+            
+            // Add imported queries
+            let importedCount = 0;
+            for (let queryData of importData.queries) {
+                if (queryData.query && queryData.query.trim()) {
+                    addQueryRow();
+                    const currentRowId = `row_${rowCounter}`;
+                    const queryTextarea = document.getElementById(`query_${currentRowId}`);
+                    queryTextarea.value = queryData.query;
+                    importedCount++;
+                }
+            }
+            
+            // If no valid queries were imported, add an empty row
+            if (importedCount === 0) {
+                addQueryRow();
+                showNotification('No valid queries found in the file', 'warning');
+            } else {
+                showNotification(`Imported ${importedCount} queries successfully`, 'success');
+            }
+            
+        } catch (error) {
+            console.error('Error importing queries:', error);
+            showNotification(`Failed to import queries: ${error.message}`, 'error');
+            
+            // Ensure at least one row exists
+            const tableBody = document.getElementById('queryTableBody');
+            if (tableBody.children.length === 0) {
+                addQueryRow();
+            }
+        }
+    };
+    
+    reader.readAsText(file);
+    
+    // Reset file input
+    event.target.value = '';
+}
+
+// Show notification message
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 1060; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+    
+    const icon = type === 'success' ? 'check-circle' : 
+                type === 'warning' ? 'exclamation-triangle' : 
+                type === 'error' ? 'exclamation-circle' : 'info-circle';
+    
+    notification.innerHTML = `
+        <i class="fas fa-${icon} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove notification after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 150);
+        }
+    }, 5000);
+}
